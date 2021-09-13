@@ -3,12 +3,15 @@
 
 
 int main() {
-    int n, m;
-    lab1::matrix f{};
-    std::cout << "Enter the size of matrix (n, m): " << std::endl;
-    std::cin >> n >> m;
+    lab1::matrix m;
+    if (lab1::D_MatrixInit(m) ){
+        std::cout << "Error initialising matrix, unsuitable data type" <<
+        std::endl;
+    }
+    if (lab1::D_ReadElems(m)) {
+        std::cout << "Error initialising matrix, unsuitable data type" <<
+        std::endl;
+    }
 
-    f.nonZeros = n*m;
-    f.columns = n;
-    f.string = m;
+    return 0;
 }
