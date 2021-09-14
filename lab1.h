@@ -6,36 +6,40 @@ namespace lab1 {
 
     enum status {
         success = 0,
-        impr_type = 1
+        impr_type = 1,
+        non_zero = 2,
+        less_zero = 3,
+        exceeded_size = 4,
+        alrd_exist = 5
     };
 
     struct node {
-        int *nRows;
-        int nColumns;
+        int *nRow;
+        int nColumn;
         int number;
         node *next;
     };
 
     struct  rows {
-        int nRows;
-        node *elINrow;
+        int nOfRow;
+        node *listOfNodes;
         rows *next;
     };
 
     struct matrix {
-        int nOFr;
-        int nOFc;
-        int nOFnonzer;
-        rows *head;
+        int nOfRows;
+        int nOfColumns;
+        int nOfNonZero;
+        rows *firstRow;
     };
-    int a;
-    std::cout << a;
+
 
     int getInt(int &a);
     int D_MatrixInit(matrix &m);
     int MatrixInit(matrix &m, int &nRows, int &nColumns);
     int D_ReadElems(matrix &m);
     int ReadElems(matrix &m, int nRow, int nColumn, int &number);
+    node *CheckAndSend(matrix &, int, int);
 }
 
 #endif

@@ -10,7 +10,7 @@ int main() {
     }
     if (lab1::D_ReadElems(m)) {
         std::cout << "Error initialising matrix, unsuitable data type" <<
-        std::endl;
+                  std::endl;
     }
 
     return 0;
