@@ -69,14 +69,30 @@ namespace lab1 {
 
 
     int ReadElems(matrix &m, int nRow, int nColumn, int &number) {
-        node *recent;
+        node *tmp, *recent;
         try {
-            recent = CheckAndSend(m, nRow, nColumn);
+            tmp = CheckAndSend(m, nRow, nColumn);
         }
         catch (int sizeExeption) {
             return exceeded_size;
         }
-        recent
+        if (tmp == nullptr)
+            return alrd_exist;
+        else {
+            recent = new node;
+            recent->nColumn = nColumn;
+            recent->nRow = nRow;
+            recent->number = number;
+            if (tmp->next == nullptr) {
+                recent->next = nullptr;
+                tmp->next = recent;
+            }
+            else {
+                recent->next = tmp->next;
+                tmp->next = recent;
+            }
+        }
+        return success;
     }
 
     // если элемент нет, то возвращается ссылка на последний элемент,

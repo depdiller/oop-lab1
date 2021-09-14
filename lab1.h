@@ -14,7 +14,7 @@ namespace lab1 {
     };
 
     struct node {
-        int *nRow;
+        int nRow;
         int nColumn;
         int number;
         node *next;
