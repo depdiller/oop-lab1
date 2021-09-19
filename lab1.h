@@ -6,11 +6,10 @@ namespace lab1 {
 
     enum status {
         success = 0,
-        impr_type = 1,
-        non_zero = 2,
-        less_zero = 3,
-        exceeded_size = 4,
-        alrd_exist = 5
+        cin_err = 1,
+        exceeded_size = 2,
+        alrd_exist = 3,
+        eof = 4
     };
 
     struct node {
@@ -34,7 +33,7 @@ namespace lab1 {
     };
 
 
-    int getInt(int &a);
+    int GetInt(int &a);
     int D_MatrixInit(matrix &m);
     int MatrixInit(matrix &m, int &nRows, int &nColumns);
     int D_ReadElems(matrix &m);

@@ -4,7 +4,7 @@
 
 int main() {
     lab1::matrix m;
-    if (lab1::D_MatrixInit(m) ){
+    if (lab1::D_MatrixInit(m) == lab1::eof){
         std::cout << "Error initialising matrix, unsuitable data type" <<std::endl;
         return 1;
     }

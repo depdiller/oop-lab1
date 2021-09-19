@@ -2,33 +2,21 @@
 #include "lab1.h"
 
 namespace lab1 {
-    const char *stateMsgs[] = {"Success", "Improper type", "You should use non zero ints", "You cannot use negative ints",
-                               "Exceeded the size of matrix", "You already have element at this position"};
-
-    int getInt(int &a) {
-        std::cin >> a;
-        if (!std::cin.good())
-            return impr_type;
-        else if (a == 0)
-            return non_zero;
-        else if (a < 0)
-            return less_zero;
-        return success;
-    }
+    const char *stateMsgs[] = {"Success", "Improper type", "Exceeded the size of matrix", "You already have element "
+                                                                                          "at this position", "End of"
+                                                                                                              " File"};
 
     int D_MatrixInit(matrix &m) {
         int stateIndic;
         int nRows, nColumns;
-        std::cout << "Hello, enter the size of matrix: " << std:: endl
-        << "Number of rows: ";
-        if (getInt(nRows))
-            return impr_type;
-        std::cout << std::endl << "Number of columns: ";
-        if (getInt(nColumns))
-            return impr_type;
-        stateIndic = MatrixInit(m, nRows, nColumns);
-        std::cout << stateMsgs[stateIndic];
-        return  success;
+        std::cout << "Hello, enter the size of matrix, number of (rows, columns): ";
+        if (GetInt(nRows) != eof && GetInt(nColumns) != eof) {
+            stateIndic = MatrixInit(m, nRows, nColumns);
+        }
+        else
+            return eof;
+        std::cout <<stateMsgs[stateIndic]<< std::endl;
+        return success;
     }
 
     int MatrixInit(matrix &m, int &nRows, int &nColumns) {
@@ -52,20 +40,19 @@ namespace lab1 {
         int stateIndic;
         int currRow, currColumn, currNum;
         std::cout << "Ok, now enter elements of your matrix." << std::endl;
-        std::cout << "Enter the row of element: " << std::endl;
-        if (getInt(currRow))
-            return impr_type;
-        std::cout << "Enter the column of element: " << std::endl;
-        if (getInt(currColumn))
-            return impr_type;
-        std::cout << "Enter number to save in matrix: " << std::endl;
-        if (getInt(currNum))
-            return impr_type;
-        stateIndic = ReadElems(m, currRow, currColumn, currNum);
-        std::cout << stateMsgs[stateIndic];
+        std::cout << "Enter parameters of new element (row, column): ";
+        if (GetInt(currRow) != eof && GetInt(currColumn) != eof) {
+            std::cout << "Enter number to save in matrix: " << std::endl;
+            if (GetInt(currNum))
+                return eof;
+            else
+                stateIndic = ReadElems(m, currRow, currColumn, currNum);
+        }
+        else
+            return eof;
+        std::cout <<stateMsgs[stateIndic]<< std::endl;
         return success;
     }
-
 
 
     int ReadElems(matrix &m, int nRow, int nColumn, int &number) {
@@ -73,7 +60,7 @@ namespace lab1 {
         try {
             tmp = CheckAndSend(m, nRow, nColumn);
         }
-        catch (int sizeExeption) {
+        catch (std::out_of_range &i) {
             return exceeded_size;
         }
         if (tmp == nullptr)
@@ -86,8 +73,7 @@ namespace lab1 {
             if (tmp->next == nullptr) {
                 recent->next = nullptr;
                 tmp->next = recent;
-            }
-            else {
+            } else {
                 recent->next = tmp->next;
                 tmp->next = recent;
             }
@@ -100,7 +86,7 @@ namespace lab1 {
     node *CheckAndSend(matrix &m, int nRow, int nColumn) {
         rows *tmp1 = m.firstRow;
         if (nRow > m.nOfRows || nColumn > m.nOfColumns)
-            throw exceeded_size;
+            throw std::out_of_range("Matrix size is limited");
         for (int i = 1; i < nRow; ++i) {
             tmp1 = tmp1->next;
         }
@@ -111,5 +97,19 @@ namespace lab1 {
             tmp2 = tmp2->next;
         }
         return nullptr;
+    }
+
+    int GetInt(int &a) {
+        int indic = 1;
+        do {
+            std::cin >> a;
+            if (std::cin.eof())
+                indic = -1;
+            else if (!std::cin.good() || a == 0 || a < 0) {
+                std::cout << "Incorrect input. Try again" << std::endl;
+                indic = 0;
+            }
+        } while (indic == 0);
+        return indic < 0 ? eof : success;
     }
 }
