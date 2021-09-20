@@ -5,8 +5,8 @@ namespace lab1 {
     const char *stateMsgs[] = {"Success", "Improper type", "Exceeded the size of matrix", "You already have element "
                                                                                           "at this position", "End of"
                                                                                                               " File"};
-    const char *msgs[] = {"0. Quit", "1. Add element to matrix", "2. Print matrix"};
-    int (*functPtr[])(matrix &) = {nullptr, D_ReadElems, D_Print};
+    const char *msgs[] = {"0. Quit", "1. Add element to matrix", "2. Print matrix", "3. Vector"};
+    int (*functPtr[])(matrix &) = {nullptr, D_ReadElems, D_Print, D_Vector};
     const int numbMsgs = sizeof(msgs) / sizeof(msgs[0]);
 
     int FunctionCall(int choice, matrix &m) {
@@ -60,6 +60,7 @@ namespace lab1 {
             tmp1->nOfRow = i;
             tmp1->listOfNodes = nullptr;
             tmp1->next = nullptr;
+            tmp1->status = 0;
             tmp->next = tmp1;
             tmp = tmp->next;
         }
@@ -72,7 +73,7 @@ namespace lab1 {
         std::cout <<"Enter parameters of new element (row, column): ";
         if (GetInt(currRow) != eof && GetInt(currColumn) != eof) {
             std::cout <<"Enter number to save in matrix: "<< std::endl;
-            if (GetInt(currNum))
+            if (GetIntNegative(currNum))
                 return eof;
             else
                 stateIndic = ReadElems(m, currRow, currColumn, currNum);
@@ -87,7 +88,7 @@ namespace lab1 {
     int ReadElems(matrix &m, int nRow, int nColumn, int &number) {
         node *tmp, *recent;
         try {
-            tmp = CheckAndSend(m, nRow, nColumn);
+            tmp = CheckAndSend(m, nRow, nColumn, number);
         }
         catch (std::out_of_range &i) {
             return exceeded_size;
@@ -97,14 +98,12 @@ namespace lab1 {
         // if there were no elements in the row
         else if (tmp->nColumn == -1) {
             tmp->nColumn = nColumn;
-            tmp->nRow = nRow;
             tmp->number = number;
         }
         //
         else {
             recent = new node;
             recent->nColumn = nColumn;
-            recent->nRow = nRow;
             recent->number = number;
             if (tmp->next == nullptr) {
                 recent->next = nullptr;
@@ -119,7 +118,7 @@ namespace lab1 {
 
     // если элемент нет, то возвращается ссылка на последний элемент,
     // если элемент есть, возвращается nullptr
-    node *CheckAndSend(matrix &m, int nRow, int nColumn) {
+    node *CheckAndSend(matrix &m, int nRow, int nColumn, int number) {
         rows *tmp1 = m.firstRow;
         if (nRow > m.nOfRows || nColumn > m.nOfColumns)
             throw std::out_of_range("Matrix size is limited");
@@ -132,34 +131,21 @@ namespace lab1 {
             node *new_el = new node;
             new_el->next = nullptr;
             new_el->nColumn = -1;
-            new_el->nRow = -1;
             tmp1->listOfNodes = new_el;
+            if (number < 0 && tmp1->status == 0)
+                tmp1->status = 1;
             return tmp1->listOfNodes;
         }
         //
         while (tmp2 != nullptr) {
-            if (tmp2->nColumn < nColumn && (tmp2->next == nullptr || tmp2->next->nColumn > nColumn))
+            if (tmp2->nColumn < nColumn && (tmp2->next == nullptr || tmp2->next->nColumn > nColumn)) {
+                if (number < 0 && tmp1->status == 0)
+                    tmp1->status = 1;
                 return tmp2;
+            }
             tmp2 = tmp2->next;
         }
         return nullptr;
-    }
-
-    int GetInt(int &a) {
-        int indic;
-        do {
-            std::cin >> a;
-            indic = 1;
-            if (std::cin.eof())
-                indic = -1;
-            else if (!std::cin.good() || a == 0 || a < 0) {
-                std::cout << "Incorrect input. Try again" << std::endl;
-                indic = 0;
-                std::cin.clear();
-                std::cin.ignore(INT_MAX, '\n');
-            }
-        } while (indic == 0);
-        return indic < 0 ? eof : success;
     }
 
     int D_Print(matrix &m) {
@@ -187,6 +173,79 @@ namespace lab1 {
         return success;
     }
 
+    int D_Vector(matrix &m) {
+        int stateIndic;
+        stateIndic = Vector(m);
+        std::cout <<stateMsgs[stateIndic]<< std::endl;
+        return success;
+    }
+
+    int Vector(matrix &m) {
+        vector *v = InitVector(m);
+        // print
+        node *tmp = v->firstNode;
+        for (int i = 0; i < m.nOfRows; ++i) {
+            std::cout << tmp->number << std::endl;
+        }
+        std::cout << std::endl;
+        // delete
+        return success;
+    }
+
+    vector *InitVector(matrix &m) {
+        int numFromVector;
+        auto *v = new vector;
+        v->nOfRows = m.nOfRows;
+        rows *rowSearch = m.firstRow;
+        node *nodeSearch, *tmp;
+        for (int i = 1; i <= m.nOfRows; ++i) {
+            node *newInVector = new node;
+            nodeSearch = rowSearch->listOfNodes;
+            if (rowSearch->status == 0) {
+                if (nodeSearch == nullptr)
+                    numFromVector = 0;
+                else
+                    numFromVector = nodeSearch->number;
+            }
+            else {
+                for (int j = 1; j < m.nOfRows; ++j) {
+                    nodeSearch = nodeSearch->next;
+                }
+                numFromVector = nodeSearch->number;
+            }
+            newInVector->nColumn = i;
+            newInVector->number = numFromVector;
+            newInVector->next = nullptr;
+            if (i == 1) {
+                v->firstNode = newInVector;
+                tmp = v->firstNode;
+            }
+            else {
+                tmp->next = newInVector;
+                tmp = tmp->next;
+            }
+            rowSearch = rowSearch->next;
+        }
+        return v;
+    }
+
+    int GetInt(int &a) {
+        int indic;
+        do {
+            std::cin >> a;
+            indic = 1;
+            if (std::cin.eof())
+                indic = -1;
+            else if (!std::cin.good() || a == 0 || a < 0) {
+                std::cout << "Incorrect input. Try again" << std::endl;
+                indic = 0;
+                std::cin.clear();
+                std::cin.ignore(INT_MAX, '\n');
+            }
+        } while (indic == 0);
+        return indic < 0 ? eof : success;
+    }
+
     int GetIntZero(int *a) {
         int indic ;
         do {
@@ -195,6 +254,23 @@ namespace lab1 {
             if (std::cin.eof())
                 indic = -1;
             else if (!std::cin.good() || *a < 0) {
+                std::cout << "Incorrect input. Try again" << std::endl;
+                indic = 0;
+                std::cin.clear();
+                std::cin.ignore(INT_MAX, '\n');
+            }
+        } while (indic == 0);
+        return indic < 0 ? eof : success;
+    }
+
+    int GetIntNegative(int &a) {
+        int indic ;
+        do {
+            std::cin >> a;
+            indic = 1;
+            if (std::cin.eof())
+                indic = -1;
+            else if (!std::cin.good() || a == 0) {
                 std::cout << "Incorrect input. Try again" << std::endl;
                 indic = 0;
                 std::cin.clear();

@@ -14,13 +14,13 @@ namespace lab1 {
     };
 
     struct node {
-        int nRow;
         int nColumn;
         int number;
         node *next;
     };
 
     struct  rows {
+        int status; //0 positive or 1 negative
         int nOfRow;
         node *listOfNodes;
         rows *next;
@@ -33,18 +33,31 @@ namespace lab1 {
         rows *firstRow;
     };
 
+    struct vector {
+        int nOfRows;
+        node* firstNode;
+    };
 
-    int GetInt(int &a);
+
     int D_MatrixInit(matrix &m);
-    int MatrixInit(matrix &m, int &nRows, int &nColumns);
     int D_ReadElems(matrix &m);
-    int ReadElems(matrix &m, int nRow, int nColumn, int &number);
-    node *CheckAndSend(matrix &, int, int);
     int D_Print(matrix &m);
+    int D_Delete(matrix &m);
+    int D_Vector(matrix &m);
+
+    int MatrixInit(matrix &m, int &nRows, int &nColumns);
+    int ReadElems(matrix &m, int nRow, int nColumn, int &number);
     int Print(matrix &m);
-    int Dialog();
+    int Delete(matrix &m);
+    int Vector(matrix &m);
+
     int FunctionCall(int , matrix &);
+    vector *InitVector(matrix &);
+    node *CheckAndSend(matrix &, int, int, int);
+    int Dialog();
+    int GetInt(int &a);
     int GetIntZero(int *);
+    int GetIntNegative(int &);
 }
 
 #endif
