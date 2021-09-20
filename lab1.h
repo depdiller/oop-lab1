@@ -1,5 +1,6 @@
 #ifndef UNTITLED_LAB1_H
 #define UNTITLED_LAB1_H
+#include <limits.h>
 
 namespace lab1 {
     extern  const char *stateMsgs[];
@@ -39,6 +40,11 @@ namespace lab1 {
     int D_ReadElems(matrix &m);
     int ReadElems(matrix &m, int nRow, int nColumn, int &number);
     node *CheckAndSend(matrix &, int, int);
+    int D_Print(matrix &m);
+    int Print(matrix &m);
+    int Dialog();
+    int FunctionCall(int , matrix &);
+    int GetIntZero(int *);
 }
 
 #endif
