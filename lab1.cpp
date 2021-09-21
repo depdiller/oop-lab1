@@ -102,10 +102,20 @@ namespace lab1 {
             recent = new node;
             recent->nColumn = nColumn;
             recent->number = number;
-            if (tmp->next == nullptr) {
+
+            if (tmp->nColumn > nColumn) {
+                rows *pLine = m.firstRow;
+                for (int i = 1; i < nRow; ++i) {
+                    pLine = pLine->next;
+                }
+                pLine->listOfNodes = recent;
+                recent->next = tmp;
+            }
+            else if (tmp->next == nullptr) {
                 recent->next = nullptr;
                 tmp->next = recent;
-            } else {
+            }
+            else {
                 recent->next = tmp->next;
                 tmp->next = recent;
             }
@@ -139,6 +149,11 @@ namespace lab1 {
                 if (number < 0 && tmp1->status == 0)
                     tmp1->status = 1;
                 return tmp2;
+            }
+            else if (tmp2->nColumn > nColumn){
+                if (number < 0 && tmp1->status == 0)
+                    tmp1->status = 1;
+                return  tmp2;
             }
             tmp2 = tmp2->next;
         }
