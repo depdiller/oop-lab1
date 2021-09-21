@@ -186,6 +186,7 @@ namespace lab1 {
         node *tmp = v->firstNode;
         for (int i = 0; i < m.nOfRows; ++i) {
             std::cout << tmp->number << std::endl;
+            tmp = tmp->next;
         }
         std::cout << std::endl;
         // delete
@@ -202,16 +203,21 @@ namespace lab1 {
             node *newInVector = new node;
             nodeSearch = rowSearch->listOfNodes;
             if (rowSearch->status == 0) {
-                if (nodeSearch == nullptr)
+                if (nodeSearch == nullptr || nodeSearch->nColumn != 1)
                     numFromVector = 0;
                 else
                     numFromVector = nodeSearch->number;
             }
             else {
-                for (int j = 1; j < m.nOfRows; ++j) {
+                while (nodeSearch != nullptr) {
+                    if (nodeSearch->next == nullptr && nodeSearch->nColumn == m.nOfRows) {
+                        numFromVector = nodeSearch->number;
+                    }
+                    else if (nodeSearch->next == nullptr && nodeSearch->nColumn != m.nOfRows){
+                        numFromVector = 0;
+                    }
                     nodeSearch = nodeSearch->next;
                 }
-                numFromVector = nodeSearch->number;
             }
             newInVector->nColumn = i;
             newInVector->number = numFromVector;
