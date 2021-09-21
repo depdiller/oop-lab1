@@ -1,13 +1,12 @@
 #ifndef UNTITLED_LAB1_H
 #define UNTITLED_LAB1_H
-#include <limits.h>
+#include <climits>
 
 namespace lab1 {
     extern  const char *stateMsgs[];
 
     enum status {
         success = 0,
-        cin_err = 1,
         exceeded_size = 2,
         alrd_exist = 3,
         eof = 4
@@ -21,7 +20,6 @@ namespace lab1 {
 
     struct  rows {
         int status; //0 positive or 1 negative
-        int nOfRow;
         node *listOfNodes;
         rows *next;
     };
@@ -29,12 +27,10 @@ namespace lab1 {
     struct matrix {
         int nOfRows;
         int nOfColumns;
-        int nOfNonZero;
         rows *firstRow;
     };
 
     struct vector {
-        int nOfRows;
         node* firstNode;
     };
 
@@ -56,7 +52,7 @@ namespace lab1 {
     node *CheckAndSend(matrix &, int, int, int);
     int Dialog();
     int GetInt(int &a);
-    int GetIntZero(int *);
+    int GetIntZero(int &);
     int GetIntNegative(int &);
     int Free(matrix &);
 }

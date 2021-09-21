@@ -22,11 +22,11 @@ namespace lab1 {
         do {
             std::cout << errmsg << std::endl;
             errmsg = "There is no such command.\n";
-            for(int i = 0; i < numbMsgs; ++i) {
-                std::cout << msgs[i] << "   ";
+            for(auto & msg : msgs) {
+                std::cout << msg << "   ";
             }
             std::cout << std::endl;
-            if (GetIntZero(&choice)) {
+            if (GetIntZero(choice)) {
                 choice = 0;
             }
         } while (choice < 0 || choice > numbMsgs - 1);
@@ -50,14 +50,11 @@ namespace lab1 {
         rows *tmp = new rows();
         tmp->next = nullptr;
         tmp->listOfNodes = nullptr;
-        tmp->nOfRow = 1;
         m.nOfRows = nRows;
         m.nOfColumns = nColumns;
         m.firstRow = tmp;
-        m.nOfNonZero = 0;
         for (int i = 2; i <= nRows; ++i) {
             rows *tmp1 = new rows;
-            tmp1->nOfRow = i;
             tmp1->listOfNodes = nullptr;
             tmp1->next = nullptr;
             tmp1->status = 0;
@@ -204,7 +201,6 @@ namespace lab1 {
     vector *InitVector(matrix &m) {
         int numFromVector;
         auto *v = new vector;
-        v->nOfRows = m.nOfRows;
         rows *rowSearch = m.firstRow;
         node *nodeSearch, *tmp;
         for (int i = 1; i <= m.nOfRows; ++i) {
@@ -260,14 +256,14 @@ namespace lab1 {
         return indic < 0 ? eof : success;
     }
 
-    int GetIntZero(int *a) {
+    int GetIntZero(int &a) {
         int indic ;
         do {
-            std::cin >> *a;
+            std::cin >> a;
             indic = 1;
             if (std::cin.eof())
                 indic = -1;
-            else if (!std::cin.good() || *a < 0) {
+            else if (!std::cin.good() || a < 0) {
                 std::cout << "Incorrect input. Try again" << std::endl;
                 indic = 0;
                 std::cin.clear();
