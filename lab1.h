@@ -42,7 +42,7 @@ namespace lab1 {
     int D_MatrixInit(matrix &m);
     int D_ReadElems(matrix &m);
     int D_Print(matrix &m);
-    int D_Delete(matrix &m);
+    int D_Free(matrix &m);
     int D_Vector(matrix &m);
 
     int MatrixInit(matrix &m, int &nRows, int &nColumns);
@@ -58,6 +58,7 @@ namespace lab1 {
     int GetInt(int &a);
     int GetIntZero(int *);
     int GetIntNegative(int &);
+    int Free(matrix &);
 }
 
 #endif

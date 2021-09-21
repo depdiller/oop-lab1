@@ -15,6 +15,6 @@ int main() {
             break;
     }
     printf("That's all. Bye!\n");
-
+    lab1::Delete(m);
     return 0;
 }

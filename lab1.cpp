@@ -5,8 +5,8 @@ namespace lab1 {
     const char *stateMsgs[] = {"Success", "Improper type", "Exceeded the size of matrix", "You already have element "
                                                                                           "at this position", "End of"
                                                                                                               " File"};
-    const char *msgs[] = {"0. Quit", "1. Add element to matrix", "2. Print matrix", "3. Vector"};
-    int (*functPtr[])(matrix &) = {nullptr, D_ReadElems, D_Print, D_Vector};
+    const char *msgs[] = {"0. Quit", "1. Add element to matrix", "2. Print matrix", "3. Vector", "4. Free"};
+    int (*functPtr[])(matrix &) = {nullptr, D_ReadElems, D_Print, D_Vector, D_Free};
     const int numbMsgs = sizeof(msgs) / sizeof(msgs[0]);
 
     int FunctionCall(int choice, matrix &m) {
@@ -190,6 +190,14 @@ namespace lab1 {
         }
         std::cout << std::endl;
         // delete
+        node *delNode, *thruNodes = v->firstNode;
+        while (thruNodes != nullptr) {
+            delNode = thruNodes;
+            thruNodes = thruNodes->next;
+            delNode->next = nullptr;
+            delete delNode;
+        }
+        delete v;
         return success;
     }
 
@@ -284,5 +292,51 @@ namespace lab1 {
             }
         } while (indic == 0);
         return indic < 0 ? eof : success;
+    }
+
+    int D_Free(matrix &m) {
+        int stateIndic;
+        stateIndic = Free(m);
+        std::cout <<stateMsgs[stateIndic]<< std::endl;
+        return success;
+    }
+
+    int Delete(matrix &m) {
+        node *delNode;
+        rows *thruRows = m.firstRow, *delRow;
+        for (int i = 0; i < m.nOfRows; ++i) {
+            node *thruNodes = thruRows->listOfNodes;
+            if (thruNodes != nullptr)
+                thruRows->listOfNodes = nullptr;
+            while (thruNodes != nullptr) {
+                delNode = thruNodes;
+                thruNodes = thruNodes->next;
+                delNode->next = nullptr;
+                delete delNode;
+            }
+            delRow = thruRows;
+            thruRows = thruRows->next;
+            delRow->next = nullptr;
+            delete delRow;
+        }
+        return success;
+    }
+
+    int Free(matrix &m) {
+        node *delNode;
+        rows *thruRows = m.firstRow;
+        for (int i = 0; i < m.nOfRows; ++i) {
+            node *thruNodes = thruRows->listOfNodes;
+            if (thruNodes != nullptr)
+                thruRows->listOfNodes = nullptr;
+            while (thruNodes != nullptr) {
+                delNode = thruNodes;
+                thruNodes = thruNodes->next;
+                delNode->next = nullptr;
+                delete delNode;
+            }
+            thruRows = thruRows->next;
+        }
+        return success;
     }
 }
